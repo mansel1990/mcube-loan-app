@@ -10,6 +10,7 @@ import {
 import { useFocusEffect, router } from "expo-router";
 import { apiFetch } from "@/lib/api";
 import { CreditorCard } from "@/components/CreditorCard";
+import { colors } from "@/constants/theme";
 
 interface Creditor {
   _id: string;
@@ -51,7 +52,7 @@ export default function CreditorsScreen() {
   if (loading) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator size="large" color="#3b82f6" />
+        <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
   }
@@ -64,32 +65,72 @@ export default function CreditorsScreen() {
     );
   }
 
+  const active = creditors.filter((c) => c.isActive);
+  const inactive = creditors.filter((c) => !c.isActive);
+
   return (
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.content}
-      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => { setRefreshing(true); load(); }} />}
-    >
-      <Text style={styles.heading}>{creditors.length === 1 ? "Your Record" : "All Creditors"}</Text>
-      {creditors.map((c) => (
-        <CreditorCard
-          key={c._id}
-          name={c.name}
-          type={c.type}
-          originalAmount={c.originalAmount}
-          totalPaid={c.totalPaid}
-          remaining={c.remaining}
-          color={c.color}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={() => { setRefreshing(true); load(); }}
+          tintColor={colors.primary}
+          colors={[colors.primary]}
         />
-      ))}
+      }
+    >
+      {active.length > 0 && (
+        <>
+          <Text style={styles.sectionLabel}>Active · {active.length}</Text>
+          {active.map((c) => (
+            <CreditorCard
+              key={c._id}
+              name={c.name}
+              type={c.type}
+              originalAmount={c.originalAmount}
+              totalPaid={c.totalPaid}
+              remaining={c.remaining}
+              color={c.color}
+            />
+          ))}
+        </>
+      )}
+      {inactive.length > 0 && (
+        <>
+          <Text style={[styles.sectionLabel, styles.sectionLabelSpaced]}>Cleared · {inactive.length}</Text>
+          {inactive.map((c) => (
+            <CreditorCard
+              key={c._id}
+              name={c.name}
+              type={c.type}
+              originalAmount={c.originalAmount}
+              totalPaid={c.totalPaid}
+              remaining={c.remaining}
+              color={c.color}
+            />
+          ))}
+        </>
+      )}
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#f1f5f9" },
-  content: { padding: 16, paddingBottom: 32 },
-  center: { flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#f1f5f9" },
-  emptyText: { color: "#6b7280", fontSize: 14 },
-  heading: { fontSize: 18, fontWeight: "700", color: "#111827", marginBottom: 16 },
+  container: { flex: 1, backgroundColor: colors.background },
+  content: { padding: 16, paddingBottom: 40 },
+  center: { flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: colors.background },
+  emptyText: { color: colors.textMuted, fontSize: 14 },
+  sectionLabel: {
+    fontSize: 11,
+    fontWeight: "700",
+    color: colors.textMuted,
+    textTransform: "uppercase",
+    letterSpacing: 0.8,
+    marginBottom: 10,
+  },
+  sectionLabelSpaced: {
+    marginTop: 8,
+  },
 });

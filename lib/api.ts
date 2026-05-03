@@ -1,14 +1,22 @@
 import { BASE_URL } from "@/constants/config";
-import { getSessionCookie, signOut } from "./auth";
+import { getSessionToken, signOut } from "./auth";
 
-export async function apiFetch<T>(path: string): Promise<T> {
-  const cookie = await getSessionCookie();
+interface FetchOptions {
+  method?: "GET" | "POST" | "PUT" | "DELETE";
+  body?: unknown;
+}
+
+export async function apiFetch<T>(path: string, options: FetchOptions = {}): Promise<T> {
+  const token = await getSessionToken();
+  const { method = "GET", body } = options;
 
   const res = await fetch(`${BASE_URL}${path}`, {
+    method,
     headers: {
       "Content-Type": "application/json",
-      ...(cookie ? { Cookie: cookie } : {}),
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
+    ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
   });
 
   if (res.status === 401) {
@@ -17,7 +25,8 @@ export async function apiFetch<T>(path: string): Promise<T> {
   }
 
   if (!res.ok) {
-    throw new Error(`API error ${res.status}`);
+    const errBody = await res.json().catch(() => ({})) as { message?: string };
+    throw new Error(errBody.message || `API error ${res.status}`);
   }
 
   return res.json() as Promise<T>;

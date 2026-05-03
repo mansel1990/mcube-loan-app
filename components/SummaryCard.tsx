@@ -1,15 +1,18 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
+import { colors, shadows, radius } from "@/constants/theme";
 
 interface Props {
   label: string;
   value: string;
   color: string;
+  tint?: string;
 }
 
-export function SummaryCard({ label, value, color }: Props) {
+export function SummaryCard({ label, value, color, tint }: Props) {
   return (
-    <View style={[styles.card, { borderLeftColor: color }]}>
+    <View style={[styles.card, tint ? { backgroundColor: tint } : null]}>
+      <View style={[styles.dot, { backgroundColor: color }]} />
       <Text style={styles.label}>{label}</Text>
       <Text style={[styles.value, { color }]}>{value}</Text>
     </View>
@@ -18,25 +21,28 @@ export function SummaryCard({ label, value, color }: Props) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#fff",
-    borderRadius: 12,
+    backgroundColor: colors.card,
+    borderRadius: radius.md,
     padding: 16,
-    borderLeftWidth: 4,
     flex: 1,
-    shadowColor: "#000",
-    shadowOpacity: 0.06,
-    shadowRadius: 4,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 2,
+    ...shadows.sm,
+  },
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: radius.full,
+    marginBottom: 8,
   },
   label: {
-    fontSize: 12,
-    color: "#6b7280",
+    fontSize: 11,
+    color: colors.textMuted,
     marginBottom: 4,
-    fontWeight: "500",
+    fontWeight: "600",
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
   },
   value: {
-    fontSize: 18,
-    fontWeight: "700",
+    fontSize: 20,
+    fontWeight: "800",
   },
 });

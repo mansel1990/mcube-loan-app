@@ -1,17 +1,25 @@
 import React from "react";
 import { Tabs } from "expo-router";
-import { Text } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { colors } from "@/constants/theme";
 
 export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
-        headerStyle: { backgroundColor: "#1e3a5f" },
+        headerStyle: { backgroundColor: colors.header },
         headerTintColor: "#fff",
-        headerTitleStyle: { fontWeight: "700" },
-        tabBarActiveTintColor: "#3b82f6",
-        tabBarInactiveTintColor: "#9ca3af",
-        tabBarStyle: { backgroundColor: "#fff", borderTopColor: "#e5e7eb" },
+        headerTitleStyle: { fontWeight: "700", fontSize: 17 },
+        tabBarActiveTintColor: colors.tabActive,
+        tabBarInactiveTintColor: colors.tabInactive,
+        tabBarStyle: {
+          backgroundColor: colors.card,
+          borderTopColor: colors.border,
+          borderTopWidth: 1,
+          paddingTop: 6,
+          paddingBottom: 8,
+        },
+        tabBarLabelStyle: { fontSize: 11, fontWeight: "600" },
       }}
     >
       <Tabs.Screen
@@ -19,7 +27,9 @@ export default function TabsLayout() {
         options={{
           title: "Dashboard",
           tabBarLabel: "Dashboard",
-          tabBarIcon: ({ color }) => <Text style={{ fontSize: 18, color }}>📊</Text>,
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="grid-outline" size={size} color={color} />
+          ),
         }}
       />
       <Tabs.Screen
@@ -27,7 +37,9 @@ export default function TabsLayout() {
         options={{
           title: "Creditors",
           tabBarLabel: "Creditors",
-          tabBarIcon: ({ color }) => <Text style={{ fontSize: 18, color }}>👥</Text>,
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="people-outline" size={size} color={color} />
+          ),
         }}
       />
       <Tabs.Screen
@@ -35,7 +47,19 @@ export default function TabsLayout() {
         options={{
           title: "Payments",
           tabBarLabel: "Payments",
-          tabBarIcon: ({ color }) => <Text style={{ fontSize: 18, color }}>📋</Text>,
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="time-outline" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="strategy"
+        options={{
+          title: "Strategy",
+          tabBarLabel: "Strategy",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="map-outline" size={size} color={color} />
+          ),
         }}
       />
     </Tabs>

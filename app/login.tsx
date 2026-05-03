@@ -10,7 +10,9 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { router } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import { signIn } from "@/lib/auth";
+import { colors, shadows, radius } from "@/constants/theme";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
@@ -40,6 +42,7 @@ export default function LoginScreen() {
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
+      <StatusBar style="dark" backgroundColor={colors.background} />
       <View style={styles.card}>
         <Text style={styles.logo}>MCube Loans</Text>
         <Text style={styles.subtitle}>Track your home loan repayments</Text>
@@ -47,7 +50,7 @@ export default function LoginScreen() {
         <TextInput
           style={styles.input}
           placeholder="Email"
-          placeholderTextColor="#9ca3af"
+          placeholderTextColor={colors.textLight}
           autoCapitalize="none"
           keyboardType="email-address"
           value={email}
@@ -57,7 +60,7 @@ export default function LoginScreen() {
         <TextInput
           style={styles.input}
           placeholder="Password"
-          placeholderTextColor="#9ca3af"
+          placeholderTextColor={colors.textLight}
           secureTextEntry
           value={password}
           onChangeText={setPassword}
@@ -86,58 +89,54 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f1f5f9",
+    backgroundColor: colors.background,
     justifyContent: "center",
     padding: 24,
   },
   card: {
-    backgroundColor: "#fff",
-    borderRadius: 16,
+    backgroundColor: colors.card,
+    borderRadius: radius.xl,
     padding: 28,
-    shadowColor: "#000",
-    shadowOpacity: 0.08,
-    shadowRadius: 12,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 4,
+    ...shadows.md,
   },
   logo: {
     fontSize: 26,
     fontWeight: "800",
-    color: "#1e3a5f",
+    color: colors.header,
     textAlign: "center",
     marginBottom: 6,
   },
   subtitle: {
     fontSize: 13,
-    color: "#6b7280",
+    color: colors.textMuted,
     textAlign: "center",
     marginBottom: 28,
   },
   input: {
     borderWidth: 1,
-    borderColor: "#e5e7eb",
-    borderRadius: 10,
+    borderColor: colors.border,
+    borderRadius: radius.sm,
     padding: 14,
     fontSize: 15,
-    color: "#111827",
+    color: colors.textPrimary,
     marginBottom: 14,
-    backgroundColor: "#f9fafb",
+    backgroundColor: colors.borderLight,
   },
   error: {
-    color: "#ef4444",
+    color: colors.danger,
     fontSize: 13,
     marginBottom: 12,
     textAlign: "center",
   },
   button: {
-    backgroundColor: "#3b82f6",
-    borderRadius: 10,
+    backgroundColor: colors.primary,
+    borderRadius: radius.sm,
     padding: 16,
     alignItems: "center",
     marginTop: 4,
   },
   buttonDisabled: {
-    backgroundColor: "#93c5fd",
+    backgroundColor: colors.primaryLight,
   },
   buttonText: {
     color: "#fff",

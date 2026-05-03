@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { formatINR, formatDate } from "@/lib/format";
+import { colors, radius } from "@/constants/theme";
 
 interface Creditor {
   name: string;
@@ -17,17 +18,21 @@ interface Props {
 
 export function PaymentRow({ amount, date, method, creditorId, notes }: Props) {
   const creditor = typeof creditorId === "object" ? creditorId : null;
-  const color = creditor?.color ?? "#6b7280";
+  const color = creditor?.color ?? colors.textLight;
   const creditorName = creditor?.name ?? "—";
+  const methodLabel = method.replace(/_/g, " ");
 
   return (
     <View style={styles.row}>
       <View style={[styles.dot, { backgroundColor: color }]} />
       <View style={styles.info}>
         <Text style={styles.creditor}>{creditorName}</Text>
-        <Text style={styles.meta}>
-          {formatDate(date)} · {method.replace("_", " ")}
-        </Text>
+        <View style={styles.metaRow}>
+          <Text style={styles.date}>{formatDate(date)}</Text>
+          <View style={[styles.methodBadge]}>
+            <Text style={styles.methodText}>{methodLabel}</Text>
+          </View>
+        </View>
         {notes ? <Text style={styles.notes}>{notes}</Text> : null}
       </View>
       <Text style={styles.amount}>{formatINR(amount)}</Text>
@@ -39,15 +44,15 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
     alignItems: "flex-start",
-    paddingVertical: 12,
+    paddingVertical: 14,
     borderBottomWidth: 1,
-    borderBottomColor: "#f3f4f6",
+    borderBottomColor: colors.borderLight,
   },
   dot: {
     width: 10,
     height: 10,
-    borderRadius: 5,
-    marginTop: 4,
+    borderRadius: radius.full,
+    marginTop: 5,
     marginRight: 12,
   },
   info: {
@@ -55,23 +60,40 @@ const styles = StyleSheet.create({
   },
   creditor: {
     fontSize: 14,
-    fontWeight: "600",
-    color: "#111827",
-    marginBottom: 2,
+    fontWeight: "700",
+    color: colors.textPrimary,
+    marginBottom: 4,
   },
-  meta: {
+  metaRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  date: {
     fontSize: 12,
-    color: "#6b7280",
+    color: colors.textMuted,
+  },
+  methodBadge: {
+    backgroundColor: colors.borderLight,
+    borderRadius: radius.full,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+  },
+  methodText: {
+    fontSize: 11,
+    color: colors.textMuted,
+    fontWeight: "600",
     textTransform: "capitalize",
   },
   notes: {
     fontSize: 11,
-    color: "#9ca3af",
-    marginTop: 2,
+    color: colors.textLight,
+    marginTop: 3,
+    fontStyle: "italic",
   },
   amount: {
     fontSize: 15,
-    fontWeight: "700",
-    color: "#10b981",
+    fontWeight: "800",
+    color: colors.success,
   },
 });
